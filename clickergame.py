@@ -2,7 +2,6 @@ import json
 import random
 
 import discord
-from discord.ext import commands
 
 
 async def correct_pressed(interaction: discord.Interaction):
@@ -14,27 +13,42 @@ async def correct_pressed(interaction: discord.Interaction):
             json_object[str(interaction.guild_id)] = 1
         else:
             json_object[str(interaction.guild_id)] += 1
-        await interaction.response.send_message(f'current streak: {json_object[str(interaction.guild_id)]}')
 
         # overwrite file with new data
         file.seek(0)
         file.truncate()
         json.dump(json_object, file)
 
+    # disable buttons and send response
+    if interaction.message is not None:
+        view = discord.ui.View.from_message(interaction.message)
+        for child in view.children:
+            child.disabled = True
+        await interaction.response.edit_message(view = view)
+    await interaction.followup.send(f'current streak: {json_object[str(interaction.guild_id)]}')
+    
     # restart command
     await command(interaction = interaction)
+    
 async def incorrect_pressed(interaction: discord.Interaction):
     with open('./data/clickergame_score.json', 'r+') as file:
         json_object = json.load(file)
 
         #update score
         json_object[str(interaction.guild_id)] = 0
-        await interaction.response.send_message(f'and there we go {interaction.user.mention} fucked it up\nscore has been reset')
 
         # overwrite file with new data
         file.seek(0)
         file.truncate()
         json.dump(json_object, file)
+        
+    # disable buttons and send response
+    if interaction.message is not None:
+        view = discord.ui.View.from_message(interaction.message)
+        for child in view.children:
+            child.disabled = True
+        await interaction.response.edit_message(view = view)
+    await interaction.followup.send(f'and there we go {interaction.user.mention} fucked it up\nscore has been reset')
 
 class ButtonList(discord.ui.View):
     def __init__(self, *, timeout = None, correct):
