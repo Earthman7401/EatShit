@@ -53,6 +53,8 @@ async def incorrect_pressed(interaction: discord.Interaction):
 class ButtonList(discord.ui.View):
     def __init__(self, *, timeout = None, correct):
         super().__init__(timeout = timeout)
+        
+		#create buttons
         for i in range(5):
             button = discord.ui.Button(style = discord.ButtonStyle.green if i == correct else discord.ButtonStyle.gray, label = str(i))
             button.callback = correct_pressed if i == correct else incorrect_pressed
