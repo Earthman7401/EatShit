@@ -5,9 +5,9 @@ import discord
 
 
 async def correct_pressed(interaction: discord.Interaction):
-    with open('./data/clickergame_score.json', 'r+') as file:
+    with open('./data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
         json_object = json.load(file)
-        
+
         # update score
         if str(interaction.guild_id) not in json_object:
             json_object[str(interaction.guild_id)] = 1
@@ -26,12 +26,12 @@ async def correct_pressed(interaction: discord.Interaction):
             child.disabled = True
         await interaction.response.edit_message(view = view)
     await interaction.followup.send(f'current streak: {json_object[str(interaction.guild_id)]}')
-    
+
     # restart command
     await command(interaction = interaction)
-    
+
 async def incorrect_pressed(interaction: discord.Interaction):
-    with open('./data/clickergame_score.json', 'r+') as file:
+    with open('./data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
         json_object = json.load(file)
 
         #update score
@@ -41,7 +41,7 @@ async def incorrect_pressed(interaction: discord.Interaction):
         file.seek(0)
         file.truncate()
         json.dump(json_object, file)
-        
+
     # disable buttons and send response
     if interaction.message is not None:
         view = discord.ui.View.from_message(interaction.message)
@@ -53,13 +53,13 @@ async def incorrect_pressed(interaction: discord.Interaction):
 class ButtonList(discord.ui.View):
     def __init__(self, *, timeout = None, correct):
         super().__init__(timeout = timeout)
-        
+
 		#create buttons
         for i in range(5):
             button = discord.ui.Button(style = discord.ButtonStyle.green if i == correct else discord.ButtonStyle.gray, label = str(i))
             button.callback = correct_pressed if i == correct else incorrect_pressed
             self.add_item(button)
-            
+  
 
 async def command(ctx = None, interaction = None):
     view = ButtonList(correct = random.randint(0, 4))
