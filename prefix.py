@@ -5,17 +5,17 @@ from discord.ext import commands
 
 DEFAULT_PREFIX = '$'
 
-async def get_prefix(bot, message):
-    with open('data.json', 'r', encoding = 'UTF-8') as infile:
+def get_prefix(bot, message):
+    with open('./data/prefixes.json', 'r', encoding = 'UTF-8') as infile:
         prefixes = json.load(infile)
-        if prefixes[str(message.guild.id)] is not None:
-            return commands.when_mentioned_or(prefixes[str(message.guild.id)])
+        if str(message.guild.id) in prefixes:
+            return prefixes[str(message.guild.id)]
         else:
-            commands.when_mentioned_or(DEFAULT_PREFIX)
+            return DEFAULT_PREFIX
 
 async def change_prefix(ctx, new_prefix: str):
     try:
-        with open('data.json', 'r+', encoding = 'UTF-8') as file:
+        with open('./data/prefixes.json', 'r+', encoding = 'UTF-8') as file:
             prefixes = json.load(file)
             prefixes[str(ctx.guild.id)] = new_prefix
 
@@ -24,6 +24,6 @@ async def change_prefix(ctx, new_prefix: str):
             file.truncate()
             json.dump(prefixes, file)
     except IOError as error:
-        ctx.send(f'Exception when updating prefix {error}')
+        await ctx.send(f'Exception when updating prefix {error}')
     else:
-        ctx.send(f'Prefix successfully set to {new_prefix}')
+        await ctx.send(f'Prefix successfully set to {new_prefix}')

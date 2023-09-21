@@ -131,6 +131,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Replit project settings
+.replit
+replit.nix
+
 # VSCode project settings
 .vscode/
 
