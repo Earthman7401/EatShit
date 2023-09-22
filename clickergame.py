@@ -5,7 +5,7 @@ import discord
 
 
 async def correct_pressed(interaction: discord.Interaction):
-    with open('./data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
+    with open('/app/data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
         json_object = json.load(file)
 
         # update score
@@ -31,7 +31,7 @@ async def correct_pressed(interaction: discord.Interaction):
     await command(interaction = interaction)
 
 async def incorrect_pressed(interaction: discord.Interaction):
-    with open('./data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
+    with open('/app/data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
         json_object = json.load(file)
 
         #update score
@@ -59,7 +59,6 @@ class ButtonList(discord.ui.View):
             button = discord.ui.Button(style = discord.ButtonStyle.green if i == correct else discord.ButtonStyle.gray, label = str(i))
             button.callback = correct_pressed if i == correct else incorrect_pressed
             self.add_item(button)
-  
 
 async def command(ctx = None, interaction = None):
     view = ButtonList(correct = random.randint(0, 4))
