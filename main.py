@@ -19,7 +19,13 @@ async def on_ready():
     with open('/app/cogs/coglist.txt', 'r', encoding = 'UTF-8') as infile:
         cog_list = infile.readlines()
         for item in cog_list:
-            await client.load_extension(f'cogs.{item[:-1]}')
+            item = item[:-1]
+            try:
+                await client.load_extension(f'cogs.{item}')
+            except commands.ExtensionAlreadyLoaded:
+                print(f'Cog {item} is already loaded')
+            except commands.ExtensionNotFound:
+                print(f'Cog {item} not found')
 
     print(f'{client.user} up and running')
 
