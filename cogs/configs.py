@@ -17,13 +17,12 @@ class Configs(commands.Cog, name = 'Config Commands'):
 
             # get the intersection of mod_roles and ctx.author.roles
             if ctx.guild.id in mod_roles:
-                intersection = [role for role in ctx.author.roles if str(
-                    role.id) in mod_roles[str(ctx.guild.id)]]
+                intersection = [role for role in ctx.author.roles if str(role.id) in mod_roles[str(ctx.guild.id)]]
             else:
                 intersection = []
             return len(intersection) > 0 or ctx.author.guild_permissions.administrator
 
-    @commands.hybrid_command(name='prefix')
+    @commands.hybrid_command(name = 'prefix')
     async def change_prefix(self, ctx, new_prefix):
         response_message = ''
         try:
@@ -45,7 +44,7 @@ class Configs(commands.Cog, name = 'Config Commands'):
         else:
             await ctx.send(response_message)
 
-    @commands.hybrid_command(name='addmodrole')
+    @commands.hybrid_command(name = 'addmodrole')
     async def add_mod_role(self, ctx):
         selection = discord.ui.RoleSelect()
         view = discord.ui.View()
@@ -80,6 +79,20 @@ class Configs(commands.Cog, name = 'Config Commands'):
         else:
             await ctx.send('Choose a role to add to the list of mod roles', view = view)
 
+    @commands.hybrid_command(name = 'modroles')
+    async def mod_roles(self, ctx):
+        embed = discord.Embed()
+
+        with open('/app/data/mod_roles.json', 'r', encoding = 'UTF-8') as infile:
+            role_list = json.load(infile)
+
+            # get mention strings of roles, separated by newline
+            if str(ctx.guild.id) not in role_list:
+                role_mentions = ''
+            else:
+                role_mentions = '\n'.join([role.mention for role in [discord.utils.get(ctx.guild.roles, id = int(id)) for id in role_list[str(ctx.guild.id)]]])
+            embed.add_field(name = 'Roles', value = role_mentions)
+        await ctx.send(embed = embed, allowed_mentions = discord.AllowedMentions.all())
 
 async def setup(client):
     await client.add_cog(Configs(client))
