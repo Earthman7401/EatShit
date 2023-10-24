@@ -79,6 +79,40 @@ class Configs(commands.Cog, name = 'Config Commands'):
         else:
             await ctx.send('Choose a role to add to the list of mod roles', view = view)
 
+    @commands.hybrid_command(name = 'removemodrole')
+    async def remove_mod_role(self, ctx):
+        selection = discord.ui.RoleSelect()
+        view = discord.ui.View()
+
+        async def callback(interaction):
+            try:
+                with open('/app/data/mod_roles.json', 'r+', encoding = 'UTF-8') as file:
+                    role_list = json.load(file)
+                    
+                    if str(interaction.guild_id) not in role_list or role_list[str(interaction.guild_id)] == []:
+                        await interaction.response.send_message('No mod roles set')
+
+                    if str(selection.values[0].id) in role_list[str(interaction.guild_id)]:
+                        role_list[str(interaction.guild_id)].remove(str(selection.values[0].id))
+                        await interaction.response.send_message(f'Successfully removed {selection.values[0].name} from mod roles')
+                    else:
+                        await interaction.response.send_message(f'{selection.values[0].name} not found in mod roles')
+
+                    # overwrite file with new data
+                    file.seek(0)
+                    file.truncate()
+                    json.dump(role_list, file)
+            except IOError:
+                await interaction.response.send_message('exception when updating mod roles')
+
+        selection.callback = callback
+        view.add_item(selection)
+
+        if ctx.interaction is not None:
+            await ctx.interaction.response.send_message('Choose a role to remove from the list of mod roles', view = view)
+        else:
+            await ctx.send('Choose a role to add to the list of mod roles', view = view)
+
     @commands.hybrid_command(name = 'modroles')
     async def mod_roles(self, ctx):
         embed = discord.Embed()

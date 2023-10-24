@@ -20,8 +20,12 @@ class DevCommands(commands.Cog, name='Developer Commands'):
         else:
             await ctx.send('Syncing...')
 
-        synced_commands = await self.client.tree.sync()
-        await ctx.send(f'{len(synced_commands)} commands synced: {synced_commands}')
+        try:
+            synced_commands = await self.client.tree.sync()
+            await ctx.send(f'{len(synced_commands)} commands synced: {synced_commands}')
+        except Exception as e:
+            await ctx.send('Error when syncing commands')
+            
 
 
 async def setup(client):
