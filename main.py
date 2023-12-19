@@ -17,23 +17,20 @@ client = commands.Bot(command_prefix=prefix.get_prefix, intents=intents)
 @client.event
 async def on_ready():
     print('Adding cogs...')
-    with open('/app/cogs/coglist.txt', 'r', encoding = 'UTF-8') as infile:
-        cog_list = infile.readlines()
-        for item in cog_list:
-            item = item[:-1]
-            try:
-                await client.load_extension(f'cogs.{item}')
-            except commands.ExtensionAlreadyLoaded:
-                print(f'Cog {item} is already loaded')
-            except commands.ExtensionNotFound:
-                print(f'Cog {item} not found')
+
+    # theres a __pycache__ file in there for some reason???
+    # anyways that slice is to exclude that file
+    for filename in os.listdir('./cogs')[1:]:
+        try:
+            # excluding last 3 characters because it's '.py'
+            print(f'Loading cog: {filename}')
+            await client.load_extension(f'cogs.{filename}'[:-3])
+        except commands.ExtensionAlreadyLoaded:
+            print(f'Cog {filename} is already loaded')
+        except commands.ExtensionNotFound:
+            print(f'Cog {filename} not found')
 
     print(f'{client.user} up and running')
-
-
-@client.hybrid_command(name='clicker')
-async def _clicker(ctx):
-    await clickergame.command(ctx)
 
 
 client.run(os.environ['TOKEN'], reconnect=True)
