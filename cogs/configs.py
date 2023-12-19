@@ -88,7 +88,7 @@ class Configs(commands.Cog, name = 'Config Commands'):
             try:
                 with open('/app/data/mod_roles.json', 'r+', encoding = 'UTF-8') as file:
                     role_list = json.load(file)
-                    
+
                     if str(interaction.guild_id) not in role_list or role_list[str(interaction.guild_id)] == []:
                         await interaction.response.send_message('No mod roles set')
 

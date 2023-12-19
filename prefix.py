@@ -1,10 +1,6 @@
 import json
 
-import discord
-from discord.ext import commands
-
 DEFAULT_PREFIX = '$'
-
 
 def get_prefix(bot, message):
     with open('/app/data/prefixes.json', 'r', encoding='UTF-8') as infile:
