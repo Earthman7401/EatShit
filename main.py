@@ -1,3 +1,11 @@
+"""
+This is the script executed by docker when the container starts.
+
+To start the program in docker, run:
+
+    $ docker compose up --build
+
+"""
 import os
 
 import discord
@@ -14,6 +22,11 @@ client = commands.Bot(command_prefix=prefix.get_prefix, intents=intents)
 
 @client.event
 async def on_ready():
+    """
+    This is automatically called when the bot has connected to discord.
+
+    Loads cogs for the bot.
+    """
     print('Adding cogs...')
 
     # theres a __pycache__ file in there for some reason???
@@ -30,5 +43,14 @@ async def on_ready():
 
     print(f'{client.user} up and running')
 
+def main():
+    """
+    Main entry point of program.
 
-client.run(os.environ['TOKEN'], reconnect=True)
+    Starts up the bot.
+    """
+    client.run(os.environ['TOKEN'], reconnect=True)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,3 +1,6 @@
+"""
+Contains the cog for minigame commands and a setup function to load the extension.
+"""
 import json
 import random
 
@@ -6,11 +9,24 @@ from discord.ext import commands
 
 
 class Minigames(commands.Cog, name='Minigames'):
-    def __init__(self, client) -> None:
+    """
+    All sorts of minigame commands.
+    """
+    def __init__(self, client: commands.Bot) -> None:
         super().__init__()
         self.client = client
 
-    async def handle_button_press(self, interaction: discord.Interaction, correct: bool):
+    async def handle_button_press(self, interaction: discord.Interaction, correct: bool) -> None:
+        """
+        Handles user pressing the buttons in the interaction.
+
+        If the user presses the correct button, increment their score.
+        If not, reset their score.
+
+        Args:
+            interaction (discord.Interaction): The interaction for the minigame.
+            correct (bool): Whether the button pressed was the correct one.
+        """
         with open('/app/data/clickergame_score.json', 'r+', encoding = 'UTF-8') as file:
             json_object = json.load(file)
 
@@ -41,14 +57,29 @@ class Minigames(commands.Cog, name='Minigames'):
             else:
                 await interaction.followup.send(f'and there we go {interaction.user.mention} fucked it up\nscore has been reset')
 
-    async def correct_pressed(self, interaction: discord.Interaction):
+    async def correct_pressed(self, interaction: discord.Interaction) -> None:
+        """
+        Callback function for when the user presses the correct button.
+
+        Args:
+            interaction (discord.Interaction): The interaction containing the button.
+        """
         await self.handle_button_press(interaction, True)
 
-    async def incorrect_pressed(self, interaction: discord.Interaction):
+    async def incorrect_pressed(self, interaction: discord.Interaction) -> None:
+        """
+        Callback function for when the user presses the incorrect button.
+
+        Args:
+            interaction (discord.Interaction): The interaction containing the button.
+        """
         await self.handle_button_press(interaction, False)
 
     class ButtonList(discord.ui.View):
-        def __init__(self, *, timeout = None, correct, clicker):
+        """
+        The button list for clickergame.
+        """
+        def __init__(self, *, timeout: float = None, correct: bool, clicker) -> None:
             super().__init__(timeout = timeout)
 
             #create buttons
@@ -57,7 +88,14 @@ class Minigames(commands.Cog, name='Minigames'):
                 button.callback = clicker.correct_pressed if i == correct else clicker.incorrect_pressed
                 self.add_item(button)
 
-    async def clicker(self, ctx = None, interaction = None):
+    async def clicker(self, ctx: commands.Context = None, interaction: discord.Interaction = None) -> None:
+        """
+        Starts the minigame "clicker".
+
+        Args:
+            ctx (commands.Context, optional): The commands.Context provided by command invocation. Defaults to None.
+            interaction (discord.Interaction, optional): The last discord.Interaction from the command invocation. Defaults to None.
+        """
         view = self.ButtonList(correct = random.randint(0, 4), clicker = self)
         if ctx is not None:
             await ctx.send('Press the green button', view = view)
@@ -65,9 +103,17 @@ class Minigames(commands.Cog, name='Minigames'):
             await interaction.message.channel.send('Press the green button', view = view)
 
     @commands.hybrid_command(name='clicker')
-    async def _clicker(self, ctx):
+    async def _clicker(self, ctx: commands.Context) -> None:
         await self.clicker(ctx)
 
 
-async def setup(client):
+async def setup(client: commands.Bot) -> None:
+    """
+    Loads the cog Minigames into the bot.
+
+    This is automatically called by commands.Bot.load_extension() and **is not meant to be called directly**.
+
+    Args:
+        client (commands.Bot): The bot to load the cog into.
+    """
     await client.add_cog(Minigames(client))
