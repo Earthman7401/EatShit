@@ -1,1 +1,7 @@
 discord.py
+discord.py
+ffmpeg
+youtube_dl
+pandas
+numpy
+matplotlib
