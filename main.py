@@ -1,10 +1,8 @@
 import os
-import sys
 
 import discord
 from discord.ext import commands
 
-import clickergame
 import prefix
 
 intents = discord.Intents.default()
