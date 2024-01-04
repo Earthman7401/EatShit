@@ -5,18 +5,20 @@ import matplotlib
 from discord.ext import commands
 import json
 import os
+
 os.chdir(f'/app/ChartBot')
 Datadir="/app/ChartBot/saved dataframe"
 Projectdir="/app"
-class Chart(commands.cog):
-    def __init__(self,client:commands.Bot):
+class Chart(commands.Cog, name='Chart'):
+    def __init__(self, client) -> None:
+        super().__init__()
         self.client = client
 
           
 
     #Create a new dataframe
-    @app_commands.command(name="creatdf", description="Creade a new dataframe")
-    async def createdf(ctx, arg1, arg2):
+    @commands.hybrid_command(name="creatdf", description="Creade a new dataframe")
+    async def createdf(ctx, arg1: str, arg2:str):
         curdir=f"{Datadir}/{arg1}"
         columns=arg2.split(",")
             #create directory
@@ -36,8 +38,8 @@ class Chart(commands.cog):
         os.chdir(Projectdir)
 
     #add index to current dataframe
-    @app_commands.command(name="appenddf", description="add new index to an exist dataframe")
-    async def appenddf(ctx, arg1, arg2, arg3):
+    @commands.hybrid_command(name="appenddf", description="add new index to an exist dataframe")
+    async def appenddf(ctx, arg1: str, arg2: str, arg3: str):
         curdir=f"{Datadir}/{arg1}"
         try:
             #open directory
@@ -62,8 +64,8 @@ class Chart(commands.cog):
         os.chdir(Projectdir)
 
     #output dataframe
-    @app_commands.command(name="outputdf",description="print out an exist dataframe")
-    async def outputdf(ctx, arg1):
+    @commands.hybrid_command(name="outputdf",description="print out an exist dataframe")
+    async def outputdf(ctx, arg1: str):
         curdir=f"{Datadir}/{arg1}"
         try:
             #open directory
@@ -79,11 +81,11 @@ class Chart(commands.cog):
             await ctx.send("dataframe not found!")
         os.chdir(Projectdir)
 
-    @app_commands.command(name="outputchart", description="out put the chart of an exist dataframe")
+    @commands.hybrid_command(name="outputchart", description="out put the chart of an exist dataframe")
     #arg1=name
     #arg2=colour
     #arg3=mode(0: line chart; 1: Bar Chart)
-    async def outputchart(ctx, arg1, arg2, arg3):
+    async def outputchart(ctx, arg1: str, arg2: str, arg3: str):
         try:
             curdir=f"{Datadir}/{arg1}"
             Colour=arg2
@@ -122,14 +124,14 @@ class Chart(commands.cog):
         except:
             await ctx.send("Failed to output chart")
 
-    @app_commands.command(name="closefigma")
-    async def closefigma(ctx):
+    @commands.hybrid_command(name="closefigma")
+    async def closefigma(self, ctx):
         plt.close()
         await ctx.send("Figma closed successfully")
 
     #delete dataframe
-    @app_commands.command(name="deldf",description="delete an exist dataframe")
-    async def deldf(ctx, arg1):
+    @commands.hybrid_command(name="deldf",description="delete an exist dataframe")
+    async def deldf(ctx, arg1: str):
         try:    
             curdir=f"{Datadir}/{arg1}"
             os.chmod(f'{curdir}', 0o777)
