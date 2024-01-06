@@ -1,3 +1,6 @@
+"""
+Contains the cog for server configuration commands and a setup function to load the extension.
+"""
 import json
 
 import discord
@@ -7,11 +10,24 @@ DEFAULT_PREFIX = '$'
 
 
 class Configs(commands.Cog, name = 'Config Commands'):
-    def __init__(self, client) -> None:
+    """
+    Commands for configuring the bot for the discord server.
+    These commands should only be accessible to moderators or members with the administrator permission.
+    """
+    def __init__(self, client: commands.Bot) -> None:
         super().__init__()
         self.client = client
 
-    def cog_check(self, ctx) -> bool:
+    def cog_check(self, ctx: commands.Context) -> bool:
+        """
+        Checks if user has permission to use commands in this cog.
+
+        Args:
+            ctx (commands.Context): The commands.Context provided by command invocation.
+
+        Returns:
+            bool: Whether the user meets the requirements to use the commands.
+        """
         with open('/app/data/mod_roles.json', 'r', encoding = 'UTF-8') as infile:
             mod_roles = json.load(infile)
 
@@ -23,7 +39,14 @@ class Configs(commands.Cog, name = 'Config Commands'):
             return len(intersection) > 0 or ctx.author.guild_permissions.administrator
 
     @commands.hybrid_command(name = 'prefix')
-    async def change_prefix(self, ctx, new_prefix):
+    async def change_prefix(self, ctx: commands.Context, new_prefix: str) -> None:
+        """
+        Changes the server-specific prefix for the discord server this is called in.
+
+        Args:
+            ctx (commands.Context): The commands.Context provided by command invocation.
+            new_prefix (str): The new prefix to set for the discord server.
+        """
         response_message = ''
         try:
             with open('/app/data/prefixes.json', 'r+', encoding = 'UTF-8') as file:
@@ -45,7 +68,14 @@ class Configs(commands.Cog, name = 'Config Commands'):
             await ctx.send(response_message)
 
     @commands.hybrid_command(name = 'addmodrole')
-    async def add_mod_role(self, ctx):
+    async def add_mod_role(self, ctx: commands.Context) -> None:
+        """
+        Adds a role to the list of moderator roles for the discord server this is called in.
+        Creates a dropdown list that lets the user pick from all roles in the server.
+
+        Args:
+            ctx (commands.Context): The commands.Context provided by command invocation.
+        """
         selection = discord.ui.RoleSelect()
         view = discord.ui.View()
 
@@ -80,7 +110,14 @@ class Configs(commands.Cog, name = 'Config Commands'):
             await ctx.send('Choose a role to add to the list of mod roles', view = view)
 
     @commands.hybrid_command(name = 'removemodrole')
-    async def remove_mod_role(self, ctx):
+    async def remove_mod_role(self, ctx: commands.Context) -> None:
+        """
+        Removes a role from the list of moderator roles for the discord server this is called in.
+        Creates a dropdown list that lets the user pick from all roles in the server.
+
+        Args:
+            ctx (commands.Context): The commands.Context provided by command invocation.
+        """
         selection = discord.ui.RoleSelect()
         view = discord.ui.View()
 
@@ -114,7 +151,13 @@ class Configs(commands.Cog, name = 'Config Commands'):
             await ctx.send('Choose a role to add to the list of mod roles', view = view)
 
     @commands.hybrid_command(name = 'modroles')
-    async def mod_roles(self, ctx):
+    async def mod_roles(self, ctx: commands.Context) -> None:
+        """
+        Shows the list of moderator roles for the discord server.
+
+        Args:
+            ctx (commands.Context): The commands.Context provided by command invocation.
+        """
         embed = discord.Embed()
 
         with open('/app/data/mod_roles.json', 'r', encoding = 'UTF-8') as infile:
@@ -129,4 +172,12 @@ class Configs(commands.Cog, name = 'Config Commands'):
         await ctx.send(embed = embed, allowed_mentions = discord.AllowedMentions.all())
 
 async def setup(client):
+    """
+    Loads the cog Configs into the bot.
+
+    This is automatically called by commands.Bot.load_extension() and **is not meant to be called directly**.
+
+    Args:
+        client (commands.Bot): The bot to load the cog into.
+    """
     await client.add_cog(Configs(client))
