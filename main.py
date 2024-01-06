@@ -29,9 +29,7 @@ async def on_ready():
     """
     print('Adding cogs...')
 
-    # theres a __pycache__ file in there for some reason???
-    # anyways that slice is to exclude that file
-    for filename in os.listdir('./cogs')[1:]:
+    for filename in os.listdir('/app/cogs'):
         try:
             # excluding last 3 characters because it's '.py'
             print(f'Loading cog: {filename}')

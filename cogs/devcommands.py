@@ -45,8 +45,8 @@ class DevCommands(commands.Cog, name='Developer Commands'):
 
         try:
             synced_commands = await self.client.tree.sync()
-            await ctx.send(f'{len(synced_commands)} commands synced: {synced_commands}')
-        except (discord.HTTPException, discord.DiscordException) as _:
+            await ctx.send(f'{len(synced_commands)} commands synced: {[command.name for command in synced_commands]}')
+        except (discord.HTTPException, discord.DiscordException):
             await ctx.send('Error when syncing commands')
 
 
