@@ -6,8 +6,8 @@
    - python
  - python modules
    - `discord.py`
-   - `ffmpeg`
-   - `youtube_dl`
+   - `matplotlib`
+   - `pandas`
 
 ## Building
 1. create a file named `.env` in folder
