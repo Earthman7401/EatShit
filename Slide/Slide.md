@@ -22,8 +22,9 @@ class: invert
 3. Project Overview
 4. Source Control
 5. Structure
-6. Tictactoe
-7. Chart
+6. Commands
+7. Tictactoe
+8. Chart
 
 ---
 
