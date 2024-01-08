@@ -26,6 +26,8 @@ class: invert
 7. Tictactoe
 8. Chart
 
+![bg contain left opacity:.1 invert](./Images/copium.png)
+
 ---
 
 # Introduction
@@ -47,8 +49,8 @@ class: invert
 
 # Project Overview
 
- - `docker compose up --build`
  - `git commit -m die`
+ - `docker compose up --build`
  - `README.md`
 
 ---
@@ -135,7 +137,9 @@ if __name__ == '__main__':
  - Permission checking
  - Reduce spaghettiness
 
-![invert bg right opacity:.07](./Images/pog.png)
+![invert bg right opacity:.1](./Images/pog.png)
+
+<!-- _footer: COGGERS -->
 
 ---
 
@@ -228,6 +232,8 @@ def get_prefix(_: commands.Bot, message: discord.Message) -> str:
  - `modroles`
  - `clickergame` (slash command and buttons testing)
 
+![bg contain right 50%](./Images/cmd_block1.png)
+
 <!-- _footer: `clickergame` was a pain to implement -->
 
 ---
@@ -238,24 +244,26 @@ def get_prefix(_: commands.Bot, message: discord.Message) -> str:
 
 ---
 
-# How it looks like
+# How it Looks Like
 
 ![bg right contain](./Images/image.png)
 
 ---
 
 # Commands
- - `tictactoe @sb @sb`
- - `place(1~9)`
+ - `tictactoe @Member @Member`
+ - `place [1-9]`
+
+![bg contain right 50%](./Images/cmd_block2.png)
 
 ---
 
-# How the game goes
- - start: `tictactoe @Member @Menber`
- - first is decided randomly
- - use `place (1~9)` to place a 'x' or a 'o' on the board
- - ends if a symbol conforms to the `winningConditions`
- - or if all the 9 boxes were filled
+# How the Game Goes
+ - Start: `tictactoe @Member @Member`
+ - First is decided randomly
+ - Use `place [1-9]` to place a 'x' or a 'o' on the board
+ - Ends if a symbol conforms to the `winningConditions`
+ - Or if all the 9 boxes were filled
 
 ```py
 winningConditions = [
@@ -272,13 +280,11 @@ winningConditions = [
 
 ---
 
-# End-1
-![bg 40%](./Images/image-1.png)
-
----
-
-# End-2
-![bg 49%](./Images/image-2.png)
+# End Conditions
+### 1
+![40%](./Images/image-1.png)
+### 2
+![49%](./Images/image-2.png)
 
 ---
 
@@ -372,7 +378,7 @@ for x in range(len(board)):
 # `pandas`
 - NumPy
 - Dataframe
-- Support various formats I/O
+- Support various I/O formats
 - Better than Excel?  
   
 <sup><sub>Yes.</sub></sup>
@@ -385,12 +391,14 @@ for x in range(len(board)):
 # Dataframe?
 - A data structure class in `pandas`
 - Basically a two dimensional array
-- Consists of **index** and **Columns**
+- Consists of **index** and **columns**
+
 ---
 
 # `matplotlib`
 - For art, chart
-- drawing tool for nerds
+- Desmos++
+- Drawing tool for nerds
  
 ![bg right](./Images/matplotlib%20cool.jpg)
 
@@ -398,7 +406,15 @@ for x in range(len(board)):
 
 ---
 
-# Drawing in `matplotlib`
+# `matplotlib.plt`
+
+- Chart type
+- xLabel
+- yLabel
+- xIndex
+- yIndex
+- Color
+- Legend
 
 ![bg right 80%](./Images/matplotlib.png)
 
@@ -439,7 +455,7 @@ else:
 ---
 
 # `json`
-- Save dataframe
+- Dataframe I/O
 
 ---
 
@@ -501,6 +517,8 @@ async def appenddf(self,ctx,name: str,arg2: str):
 - `outputchart`
 - `closefigma`
 
+![bg right 50%](./Images/cmd_block3.png)
+
 ---
 
 ## `createdf`
@@ -546,13 +564,15 @@ async def appenddf(self,ctx,name: str,arg2: str):
 
 ---
 
-# About closefigma
+## `closefigma`
 
 ![](./Images/closefigma.png)
 
 ---
 
-![](./Images/no%20closefigma.png)
+# About closefigma
+
+![bg contain right](./Images/no%20closefigma.png)
 
 ---
 
@@ -560,4 +580,5 @@ async def appenddf(self,ctx,name: str,arg2: str):
 
 <sup><sub>Check the [Github repository](https://github.com/Earthman7401/SDLDiscord) for a FREE drink!!!</sub></sup>
 
+![bg right 50%](./Images/qr-code.png)
 <!-- _footer: The link is https://github.com/Earthman7401/SDLDiscord -->
