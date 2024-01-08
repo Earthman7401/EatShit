@@ -7,11 +7,11 @@ class: invert
 [//]: # "Message me on discord (earthman7401) or email me (yp11131100@yphs.tp.edu.tw)."
 [//]: # "The first person to do so gets a drink from me."
 
-# WE MADE A FUCKING DISCORD BOT LMFAO
+# DISCORD BOT PROJECT
 
 \- 20923, 20834, 20838
 
-![bg right](https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Trollface_non-free.png/220px-Trollface_non-free.png)
+![bg right 100%](./Images/discord.png)
 
 ---
 
@@ -22,6 +22,8 @@ class: invert
 3. Project Overview
 4. Source Control
 5. Structure
+6. Tictactoe
+7. Chart
 
 ---
 
@@ -174,7 +176,7 @@ async def setup(client):
 
 # how it looks like
 
-![bg right 35%](image.png)
+![bg right 35%](./Images/image.png)
 
 ---
 
@@ -207,12 +209,12 @@ winningConditions = [
 ---
 
 # end-1
-![bg 40%](image-1.png)
+![bg 40%](./Images/image-1.png)
 
 ---
 
 # end-2
-![bg 49%](image-2.png)
+![bg 49%](./Images/image-2.png)
 
 ---
 
