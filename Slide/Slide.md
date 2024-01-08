@@ -211,6 +211,10 @@ def get_prefix(_: commands.Bot, message: discord.Message) -> str:
 
 ---
 
+![bg contain](./Images/interactionresponse_docs.png)
+
+---
+
 ![bg contain](./Images/webhook_docs.png)
 
 ---
@@ -234,19 +238,19 @@ def get_prefix(_: commands.Bot, message: discord.Message) -> str:
 
 ---
 
-# how it looks like
+# How it looks like
 
 ![bg right contain](./Images/image.png)
 
 ---
 
-# commands
+# Commands
  - `tictactoe @sb @sb`
  - `place(1~9)`
 
 ---
 
-# how the game goes
+# How the game goes
  - start: `tictactoe @Member @Menber`
  - first is decided randomly
  - use `place (1~9)` to place a 'x' or a 'o' on the board
@@ -268,12 +272,12 @@ winningConditions = [
 
 ---
 
-# end-1
+# End-1
 ![bg 40%](./Images/image-1.png)
 
 ---
 
-# end-2
+# End-2
 ![bg 49%](./Images/image-2.png)
 
 ---
