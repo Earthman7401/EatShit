@@ -236,7 +236,7 @@ def get_prefix(_: commands.Bot, message: discord.Message) -> str:
 
 # how it looks like
 
-![bg right 35%](./Images/image.png)
+![bg right contain](./Images/image.png)
 
 ---
 
@@ -369,23 +369,26 @@ for x in range(len(board)):
 - NumPy
 - Dataframe
 - Support various formats I/O
-- better than Excel?
-![bg right](Images/panda.jpg)
+- Better than Excel?  
+  
+<sup><sub>Yes.</sub></sup>
+![bg right](./Images/panda.jpg)
+
 <!-- _footer: but Excel got a world champion while pandas doesn't, unfair : ( -->
 
 ---
 
 # Dataframe?
-- a data structure class in `pandas`
-- basically a atwo dimensional array
-- consist of **index** and **Columns**
+- A data structure class in `pandas`
+- Basically a two dimensional array
+- Consists of **index** and **Columns**
 ---
 
 # `matplotlib`
 - For art, chart
 - drawing tool for nerds
  
-![bg right ](./Images/matplotlib%20cool.jpg)
+![bg right](./Images/matplotlib%20cool.jpg)
 
 <!-- _footer: from Twitter User @S_Conradi -->
 
@@ -399,19 +402,19 @@ for x in range(len(board)):
 
 `./cogs/chart.py`
 ```py
-df_dir=f"{DATA_DIR}/{title}"
-data=f"{DATA_DIR}/{title}/{title}.json"
+df_dir = f"{DATA_DIR}/{title}"
+data = f"{DATA_DIR}/{title}/{title}.json"
 df_info = json.load(open(data, encoding="utf-8", mode='r'))
-x_label=df_info['Column1']
-y_label=df_info['Column2']
+x_label = df_info['Column1']
+y_label = df_info['Column2']
 x_index = df_info['Column1_index']
 y_index = df_info['Column2_index']
 #create chart
 if mode == "0":
     plt.plot(x_index, y_index, color)
 elif mode == "1":
-    x_int=[int(x) for x in x_index]
-    y_int=[int(y) for y in y_index]
+    x_int = [int(x) for x in x_index]
+    y_int = [int(y) for y in y_index]
     plt.bar(x_int, y_int, color=color)
 plt.xlabel(x_label)
 plt.ylabel(y_label)
@@ -432,36 +435,32 @@ else:
 ---
 
 # `json`
-- save dataframe
+- Save dataframe
 
 ---
 
 `./cogs/chart.py`
 ```py 
 @commands.hybrid_command(name="appenddf", description="add new index to an exist dataframe")
-    async def appenddf(self,ctx,name: str,arg2: str):
-        """
-        the function is for adding index into an existed dataframe
-        """
-        df_dir=f"{DATA_DIR}/{name}"
-        data=f'{DATA_DIR}/{name}/{name}.json'
-        index=arg2.split(",")
-        #read dataframe
-        df_info = open(data, encoding="utf-8", mode='r')
-        #there problem here: it should be loaded into dict instead of str
-        df_append=json.load(df_info)#load json file
-        #3. check the type of the index
-        for i in range (len(df_append)):
-            df = df_append[i]
-            d = list(df.keys())
-            dict_key = d[0]
-            dict_value = df[dict_key]
-            if  dict_value == "N/A":
-                df[dict_key] = [float(index[i])]
-            else:
-                df[dict_key].append((float(index[i])))
-        df_info.close()
-        #write dataframe
+async def appenddf(self,ctx,name: str,arg2: str):
+    df_dir = f"{DATA_DIR}/{name}"
+    data = f'{DATA_DIR}/{name}/{name}.json'
+    index = arg2.split(",")
+    # read dataframe
+    df_info = open(data, encoding="utf-8", mode='r')
+    # there problem here: it should be loaded into dict instead of str
+    df_append = json.load(df_info)#load json file
+    # 3. check the type of the index
+    for i in range (len(df_append)):
+        df = df_append[i]
+        d = list(df.keys())
+        dict_key = d[0]
+        dict_value = df[dict_key]
+        if  dict_value == "N/A":
+            df[dict_key] = [float(index[i])]
+        else:
+            df[dict_key].append((float(index[i])))
+    df_info.close()
 ```
 
 ---
@@ -482,7 +481,7 @@ else:
 
 ---
 
-## An example of how the data stores using JSON array
+## An example of storing data with JSON arrays
 
 ```json
 [{"year": [2021.0, 2022.0, 2023.0, 2020.0]}, {"gdp": [50000.0, 10000.0, 30000.0, 120000.0]}]
@@ -502,7 +501,7 @@ else:
 
 ## `createdf`
 
-![](Images/createdf.png)
+![](./Images/createdf.png)
 
 ```json
 [{"year": "N/A"}, {"gdp": "N/A"}]
@@ -512,7 +511,7 @@ else:
 
 ## `appenddf`
 
-![](Images/appenddf.png)
+![](./Images/appenddf.png)
 ```json
 [{"year": [2021.0, 2022.0, 2023.0]}, {"gdp": [50000.0, 10000.0, 30000.0]}]
 ```
@@ -521,37 +520,35 @@ else:
 
 ## `outputdf`
 
-![](Images/outputdf.png)
+![](./Images/outputdf.png)
 
 ---
 
 ## `deldf`
 
-![](Images/deldf.png)
+![](./Images/deldf.png)
 
 ---
 
 ## `outputchart (line)`
 
-![](Images/outputchart%20line.png)
+![](./Images/outputchart%20line.png)
 
 ---
 
 ## `outputchart (bar)`
 
-![](Images/outputchart%20bar.png)
-
----
-
-## `outputchart (bar)`
-
-![](./Images/closefigma.png)
+![](./Images/outputchart%20bar.png)
 
 ---
 
 # About closefigma
 
-![bg right 70%](Images/no%20closefigma.png)
+![](./Images/closefigma.png)
+
+---
+
+![](./Images/no%20closefigma.png)
 
 ---
 
