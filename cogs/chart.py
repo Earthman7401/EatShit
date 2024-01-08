@@ -4,7 +4,6 @@ enable users to create chart via discord bot
 import os
 import json
 import discord
-import pandas
 import matplotlib.pyplot as plt
 import matplotlib
 from discord.ext import commands

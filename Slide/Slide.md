@@ -105,7 +105,7 @@ if __name__ == '__main__':
  - Permission checking
  - Reduce spaghettiness
 
-![invert bg right opacity:.05](./Images/pog.png)
+![invert bg right opacity:.07](./Images/pog.png)
 
 ---
 
@@ -163,6 +163,211 @@ async def setup(client):
 ---
 
 ![bg contain](./Images/webhook_docs.png)
+
+---
+
+ # Chart
+
+![bg right opacity:.5](./Images/pandas.png)
+
+---
+
+# libraries
+
+- `pandas`
+- `matplotlib`
+- `json`
+
+---
+
+# pandas
+- NumPy
+- Dataframe
+- Support various formats I/O
+- better than Excel?
+![bg right](Images/panda.jpg)
+<!-- _footer: but Excel got a world champion while pandas doesn't, unfair : ( -->
+
+---
+
+# Dataframe?
+- a data structure class in `pandas`
+- basically a atwo dimensional array
+- consist of **index** and **Columns**
+---
+
+# matplotlib
+- For art, chart
+- drawing tool for nerds
+ 
+![bg right ](./Images/matplotlib%20cool.jpg)
+
+<!-- _footer: from Twitter User @S_Conradi -->
+
+---
+
+# drawing in matplotlib
+
+![bg right 80%](./Images/matplotlib.png)
+
+---
+
+`./app/cogs/chart.py`
+```py
+
+        df_dir=f"{DATA_DIR}/{title}"
+        data=f"{DATA_DIR}/{title}/{title}.json"
+        df_info = json.load(open(data, encoding="utf-8", mode='r'))
+        x_label=df_info['Column1']
+        y_label=df_info['Column2']
+        x_index = df_info['Column1_index']
+        y_index = df_info['Column2_index']
+        #create chart
+        if mode == "0":
+            plt.plot(x_index, y_index, color)
+        elif mode == "1":
+            x_int=[int(x) for x in x_index]
+            y_int=[int(y) for y in y_index]
+            plt.bar(x_int, y_int, color=color)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.title(title)
+        #save chart
+        if os.path.exists(f'{df_dir}/{title}output'):
+            if os.path.isfile(f'{df_dir}/{title}output/{title}.png'):
+                os.remove(f"{df_dir}/{title}output/{title}.png")
+                plt.savefig(f"{df_dir}/{title}output/{title}.png")
+            else:
+                plt.savefig(f"{df_dir}/{title}output/{title}.png")
+        else:
+            os.mkdir(f'{df_dir}/{title}output')
+            os.chmod(f'{df_dir}/{title}output', 0o777)
+            plt.savefig(f"{df_dir}/{title}output/{title}.png")
+```
+
+---
+
+# json
+- save dataframe
+
+---
+
+`./app/cogs/chart.py`
+```py 
+@commands.hybrid_command(name="appenddf", description="add new index to an exist dataframe")
+    async def appenddf(self,ctx,name: str,arg2: str):
+        """
+        the function is for adding index into an existed dataframe
+        """
+        df_dir=f"{DATA_DIR}/{name}"
+        data=f'{DATA_DIR}/{name}/{name}.json'
+        index=arg2.split(",")
+        #read dataframe
+        df_info = open(data, encoding="utf-8", mode='r')
+        #there problem here: it should be loaded into dict instead of str
+        df_append=json.load(df_info)#load json file
+        #3. check the type of the index
+        for i in range (len(df_append)):
+            df = df_append[i]
+            d = list(df.keys())
+            dict_key = d[0]
+            dict_value = df[dict_key]
+            if  dict_value == "N/A":
+                df[dict_key] = [float(index[i])]
+            else:
+                df[dict_key].append((float(index[i])))
+        df_info.close()
+        #write dataframe
+```
+
+---
+
+<center>
+
+| Python           | JSON   |
+| ---------------- | ------ |
+| dict             | object |
+| **list**, tuple      |**array**  |
+| str              | string |
+| int, long, float | number |
+| True             | true   |
+| False            | false  |
+| None             | null   |
+
+</center>
+
+---
+
+## An example of how the data stores using JSON array
+>
+```json
+[{"year": [2021.0, 2022.0, 2023.0, 2020.0]}, {"gdp": [50000.0, 10000.0, 30000.0, 120000.0]}]
+```
+
+---
+
+# commands
+- `createdf`
+- `appenddf`
+- `outputdf`
+- `deldf`
+- `outputchart`
+- `closefigma`
+
+---
+
+## `createdf`
+
+![](Images/createdf.png)
+
+```json
+[{"year": "N/A"}, {"gdp": "N/A"}]
+```
+
+---
+
+## `appenddf`
+
+![](Images/appenddf.png)
+```json
+[{"year": [2021.0, 2022.0, 2023.0]}, {"gdp": [50000.0, 10000.0, 30000.0]}]
+```
+
+---
+
+## `outputdf`
+
+![](Images/outputdf.png)
+
+---
+
+## `deldf`
+
+![](Images/deldf.png)
+
+---
+
+## `outputchart (line)`
+
+![](Images/outputchart%20line.png)
+
+---
+
+## `outputchart (bar)`
+
+![](Images/outputchart%20bar.png)
+
+---
+
+## `outputchart (bar)`
+
+![](./Images/closefigma.png)
+
+---
+
+# about closefigma
+
+![bg right 70%](Images/no%20closefigma.png)
 
 ---
 
