@@ -75,13 +75,13 @@ class Minigames2(commands.Cog, name='Minigames2'):
             num = random.randint(1, 2)
             if num == 1:
                 turn = player1
-                await ctx.send("It is <@" + str(player1.id) + ">'s turn.")
+                await ctx.send(f"It is {player1.mention}'s turn.")
             elif num == 2:
                 turn = player2
-                await ctx.send("It is <@" + str(player2.id) + ">'s turn.")
-        else: #avoinding the situation that two games happen at the same time
+                await ctx.send(f"It is {player2.mention}'s turn.")
+        else: # avoinding the situation that two games happen at the same time
             await ctx.send("A game is already in progress! Finish it before starting a new one.")
-    
+
     @commands.hybrid_command(name="place", description="place an 'x' or a 'o' on the gaming board")
     async def place(self, ctx, pos: int):
         global turn
@@ -99,49 +99,48 @@ class Minigames2(commands.Cog, name='Minigames2'):
             [  7  ][  8  ][  9  ]    
 
         """
-        if not gameOver:
-            mark = ""
-            if turn == ctx.message.author:
-                if turn == player1:
-                    mark = ":regional_indicator_x:"#cross in tictactoe (an emoji)
-                elif turn == player2:
-                    mark = ":o2:"#a circle in tictactoe (an emoji)
-                if 0 < pos < 10 and board[pos - 1] == ":white_large_square:" :
-                    board[pos - 1] = mark
-                    count += 1
-
-                    # print the board
-                    line = ""
-                    for x in range(len(board)):
-                        if x == 2 or x == 5 or x == 8:
-                            line += " " + board[x]
-                            await ctx.send(line)
-                            line = ""
-                        else:
-                            line += " " + board[x]
-
-                    checkWinner(winningConditions, mark)
-                    print(count)
-                    if gameOver == True:
-                        await ctx.send(mark + " wins!")
-                    elif count >= 9:
-                        gameOver = True
-                        await ctx.send("It's a tie!")
-
-                    # switch turns
-                    if turn == player1:
-                        turn = player2
-                    elif turn == player2:
-                        turn = player1
-                else:
-                    await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
-            else:
-                await ctx.send("It is not your turn.")
-        else:
+        if gameOver:
             await ctx.send("Please start a new game using the $tictactoe command.")
+            return
 
+        if turn != ctx.message.author:
+            await ctx.send("It is not your turn.")
+            return
 
-async def checkWinner(winningConditions, mark):
+        if not (0 < pos < 10 and board[pos - 1] == ":white_large_square:"):
+            await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
+            return
+
+        mark = ":regional_indicator_x:" if turn == player1 else ":o2:"
+        board[pos - 1] = mark
+        count += 1
+
+        # print the board
+        line = ""
+        for x in range(len(board)):
+            if x == 2 or x == 5 or x == 8: # x % 3 == 2
+                line += " " + board[x]
+                await ctx.send(line)
+                line = ""
+            else:
+                line += " " + board[x]
+
+        checkWinner(winningConditions, mark)
+        print(count)
+        if gameOver:
+            await ctx.send(mark + " wins!")
+        elif count >= 9:
+            gameOver = True
+            await ctx.send("It's a tie!")
+
+        # switch turns
+        if turn == player1:
+            turn = player2
+        elif turn == player2:
+            turn = player1
+
+def checkWinner(winningConditions, mark):
+    print('checking')
     global gameOver
     for condition in winningConditions:
         if board[condition[0]] == mark and board[condition[1]] == mark and board[condition[2]] == mark:
@@ -170,10 +169,6 @@ async def setup(client: commands.Bot) -> None:
         client (commands.Bot): The bot to load the cog into.
     """
     await client.add_cog(Minigames2(client))
-
-
-
-
 
 #you may start a game by using the command $tictactoe @someone @someone
 #using the command !place 1-9 to place a cross or a circle

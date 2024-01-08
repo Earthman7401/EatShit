@@ -70,7 +70,7 @@ class: invert
 
 # Entry Point
 
-`main.py:`
+`./main.py:`
 ```py
 @client.event
 async def on_ready():
