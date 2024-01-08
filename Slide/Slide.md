@@ -68,6 +68,34 @@ class: invert
 
 ---
 
+`./Dockerfile:`
+```Dockerfile
+# Copy the source code into the container.
+COPY --chown=appuser . .
+RUN chown -R appuser /app/data
+```
+
+---
+
+`./compose.yaml:`
+```yaml
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    volumes:
+      - bot-data:/app/data
+
+volumes:
+  bot-data:
+```
+
+---
+
 # Entry Point
 
 `./main.py:`
@@ -96,7 +124,6 @@ if __name__ == '__main__':
 ```
 
 ---
-
 
 # Cogs?
 
@@ -143,7 +170,24 @@ async def setup(client):
  - `commands.Context`
  - Prefixed / Slash / Hybrid
 
-![bg right contain](./Images/context_docs.png)
+![bg right contain](./Images/prefixed_command.png)
+
+---
+
+![bg contain](./Images/context_docs.png)
+
+---
+
+# Prefixes
+```py
+def get_prefix(_: commands.Bot, message: discord.Message) -> str:
+    with open('/app/data/prefixes.json', 'r', encoding='UTF-8') as infile:
+        prefixes = json.load(infile)
+        if str(message.guild.id) in prefixes:
+            return prefixes[str(message.guild.id)]
+        else:
+            return DEFAULT_PREFIX
+```
 
 ---
 
@@ -151,8 +195,10 @@ async def setup(client):
 
  - `discord.Interaction`
  - Timeout
- - `Interaction.defer()`
+ - `InteractionResponse.defer()`
  - `Interaction.followup: discord.Webhook`
+
+![bg right contain](./Images/timeout.png)
 
 <!-- _footer: Slash commands are a pain to work with :/ -->
 
@@ -166,6 +212,19 @@ async def setup(client):
 
 ---
 
+# Commands
+
+ - `sync`
+ - `prefix`
+ - `addmodrole`
+ - `removemodrole`
+ - `modroles`
+ - `clickergame` (slash command and buttons testing)
+
+<!-- _footer: `clickergame` was a pain to implement -->
+
+---
+
 # Tictactoe
 
 ![bg right opacity:.5](./Images/tictactoe.png)
@@ -174,22 +233,22 @@ async def setup(client):
 
 # how it looks like
 
-![bg right 35%](image.png)
+![bg right contain](image.png)
 
 ---
 
 # commands
--`tictactoe @sb @sb`
--`place(1~9)`
+ - `tictactoe @sb @sb`
+ - `place(1~9)`
 
 ---
 
 # how the game goes
--start: `tictactoe @Member @Menber`
--first is decided randomly
--use `place (1~9)` to place a 'x' or a 'o' on the board
--ends if a symbol conforms to the `winningConditions`
--or if all the 9 boxes were filled
+ - start: `tictactoe @Member @Menber`
+ - first is decided randomly
+ - use `place (1~9)` to place a 'x' or a 'o' on the board
+ - ends if a symbol conforms to the `winningConditions`
+ - or if all the 9 boxes were filled
 
 ```py
 winningConditions = [
@@ -206,96 +265,96 @@ winningConditions = [
 
 ---
 
-# end-1
+# End-1
 ![bg 40%](image-1.png)
 
 ---
 
-# end-2
+# End-2
 ![bg 49%](image-2.png)
 
 ---
 
-# what if?
+# What if?
 
 ```py
 if turn != ctx.message.author:
-            await ctx.send("It is not your turn.")
-            return
+    await ctx.send("It is not your turn.")
+    return
 ```
 
 ---
-# before
+# Before
 ```py
 if not gameOver:
-            mark = ""
-            if turn == ctx.author:
-                if turn == player1:
-                    mark = ":regional_indicator_x:"#cross in tictactoe (an emoji)
-                elif turn == player2:
-                    mark = ":o2:"
-                if 0 < pos < 10 and board[pos - 1] == ":white_large_square:" :
-                    board[pos - 1] = mark
-                    count += 1
-                    if gameOver == True:
-                        await ctx.send(mark + " wins!")
-                    elif count >= 9:
-                        gameOver = True
-                        await ctx.send("It's a tie!")
+    mark = ""
+    if turn == ctx.author:
+        if turn == player1:
+            mark = ":regional_indicator_x:"#cross in tictactoe (an emoji)
+        elif turn == player2:
+            mark = ":o2:"
+        if 0 < pos < 10 and board[pos - 1] == ":white_large_square:" :
+            board[pos - 1] = mark
+            count += 1
+            if gameOver == True:
+                await ctx.send(mark + " wins!")
+            elif count >= 9:
+                gameOver = True
+                await ctx.send("It's a tie!")
 
-                    # switch turns
-                    if turn == player1:
-                        turn = player2
-                    elif turn == player2:
-                        turn = player1
-                else:
-                    await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
-            else:
-                await ctx.send("It is not your turn.")
+            # switch turns
+            if turn == player1:
+                turn = player2
+            elif turn == player2:
+                turn = player1
         else:
-            await ctx.send("Please start a new game using the $tictactoe command.")
+            await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
+    else:
+        await ctx.send("It is not your turn.")
+else:
+    await ctx.send("Please start a new game using the $tictactoe command.")
             
 ```
 
 ---
 
-# after 
+# After 
 ```py
 if gameOver:
-            await ctx.send("Please start a new game using the $tictactoe command.")
-            return
+    await ctx.send("Please start a new game using the $tictactoe command.")
+    return
 
-        if turn != ctx.message.author:
-            await ctx.send("It is not your turn.")
-            return
+if turn != ctx.message.author:
+    await ctx.send("It is not your turn.")
+    return
 
-        if not (0 < pos < 10 and board[pos - 1] == ":white_large_square:"):
-            await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
-            return
+if not (0 < pos < 10 and board[pos - 1] == ":white_large_square:"):
+    await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
+    return
 
-        mark = ":regional_indicator_x:" if turn == player1 else ":o2:"
-        board[pos - 1] = mark
-        count += 1
-        
+mark = ":regional_indicator_x:" if turn == player1 else ":o2:"
+board[pos - 1] = mark
+count += 1
+
+line = ""
+for x in range(len(board)):
+    if x == 2 or x == 5 or x == 8: # x % 3 == 2
+        line += " " + board[x]
+        await ctx.send(line)
         line = ""
-        for x in range(len(board)):
-            if x == 2 or x == 5 or x == 8: # x % 3 == 2
-                line += " " + board[x]
-                await ctx.send(line)
-                line = ""
-            else:
-                line += " " + board[x]
+    else:
+        line += " " + board[x]
 ```
 
 ---
 
- # Chart
+# Chart
 
 ![bg right opacity:.5](./Images/pandas.png)
 
 ---
 
-# libraries
+# Libraries
 
 - `pandas`
 - `matplotlib`
@@ -303,7 +362,7 @@ if gameOver:
 
 ---
 
-# pandas
+# `pandas`
 - NumPy
 - Dataframe
 - Support various formats I/O
@@ -319,7 +378,7 @@ if gameOver:
 - consist of **index** and **Columns**
 ---
 
-# matplotlib
+# `matplotlib`
 - For art, chart
 - drawing tool for nerds
  
@@ -329,53 +388,52 @@ if gameOver:
 
 ---
 
-# drawing in matplotlib
+# Drawing in `matplotlib`
 
 ![bg right 80%](./Images/matplotlib.png)
 
 ---
 
-`./app/cogs/chart.py`
+`./cogs/chart.py`
 ```py
-
-        df_dir=f"{DATA_DIR}/{title}"
-        data=f"{DATA_DIR}/{title}/{title}.json"
-        df_info = json.load(open(data, encoding="utf-8", mode='r'))
-        x_label=df_info['Column1']
-        y_label=df_info['Column2']
-        x_index = df_info['Column1_index']
-        y_index = df_info['Column2_index']
-        #create chart
-        if mode == "0":
-            plt.plot(x_index, y_index, color)
-        elif mode == "1":
-            x_int=[int(x) for x in x_index]
-            y_int=[int(y) for y in y_index]
-            plt.bar(x_int, y_int, color=color)
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
-        plt.title(title)
-        #save chart
-        if os.path.exists(f'{df_dir}/{title}output'):
-            if os.path.isfile(f'{df_dir}/{title}output/{title}.png'):
-                os.remove(f"{df_dir}/{title}output/{title}.png")
-                plt.savefig(f"{df_dir}/{title}output/{title}.png")
-            else:
-                plt.savefig(f"{df_dir}/{title}output/{title}.png")
-        else:
-            os.mkdir(f'{df_dir}/{title}output')
-            os.chmod(f'{df_dir}/{title}output', 0o777)
-            plt.savefig(f"{df_dir}/{title}output/{title}.png")
+df_dir=f"{DATA_DIR}/{title}"
+data=f"{DATA_DIR}/{title}/{title}.json"
+df_info = json.load(open(data, encoding="utf-8", mode='r'))
+x_label=df_info['Column1']
+y_label=df_info['Column2']
+x_index = df_info['Column1_index']
+y_index = df_info['Column2_index']
+#create chart
+if mode == "0":
+    plt.plot(x_index, y_index, color)
+elif mode == "1":
+    x_int=[int(x) for x in x_index]
+    y_int=[int(y) for y in y_index]
+    plt.bar(x_int, y_int, color=color)
+plt.xlabel(x_label)
+plt.ylabel(y_label)
+plt.title(title)
+#save chart
+if os.path.exists(f'{df_dir}/{title}output'):
+    if os.path.isfile(f'{df_dir}/{title}output/{title}.png'):
+        os.remove(f"{df_dir}/{title}output/{title}.png")
+        plt.savefig(f"{df_dir}/{title}output/{title}.png")
+    else:
+        plt.savefig(f"{df_dir}/{title}output/{title}.png")
+else:
+    os.mkdir(f'{df_dir}/{title}output')
+    os.chmod(f'{df_dir}/{title}output', 0o777)
+    plt.savefig(f"{df_dir}/{title}output/{title}.png")
 ```
 
 ---
 
-# json
+# `json`
 - save dataframe
 
 ---
 
-`./app/cogs/chart.py`
+`./cogs/chart.py`
 ```py 
 @commands.hybrid_command(name="appenddf", description="add new index to an exist dataframe")
     async def appenddf(self,ctx,name: str,arg2: str):
@@ -407,29 +465,29 @@ if gameOver:
 
 <center>
 
-| Python           | JSON   |
-| ---------------- | ------ |
-| dict             | object |
-| **list**, tuple      |**array**  |
-| str              | string |
-| int, long, float | number |
-| True             | true   |
-| False            | false  |
-| None             | null   |
+| Python           | JSON      |
+| ---------------- | --------- |
+| dict             | object    |
+| **list**, tuple  | **array** |
+| str              | string    |
+| int, long, float | number    |
+| True             | true      |
+| False            | false     |
+| None             | null      |
 
 </center>
 
 ---
 
 ## An example of how the data stores using JSON array
->
+
 ```json
 [{"year": [2021.0, 2022.0, 2023.0, 2020.0]}, {"gdp": [50000.0, 10000.0, 30000.0, 120000.0]}]
 ```
 
 ---
 
-# commands
+# Commands
 - `createdf`
 - `appenddf`
 - `outputdf`
@@ -488,7 +546,7 @@ if gameOver:
 
 ---
 
-# about closefigma
+# About closefigma
 
 ![bg right 70%](Images/no%20closefigma.png)
 
