@@ -166,6 +166,129 @@ async def setup(client):
 
 ---
 
+# Tictactoe
+
+![bg right opacity:.5](./Images/tictactoe.png)
+
+---
+
+# how it looks like
+
+![bg right 35%](image.png)
+
+---
+
+# commands
+-`tictactoe @sb @sb`
+-`place(1~9)`
+
+---
+
+# how the game goes
+-start: `tictactoe @Member @Menber`
+-first is decided randomly
+-use `place (1~9)` to place a 'x' or a 'o' on the board
+-ends if a symbol conforms to the `winningConditions`
+-or if all the 9 boxes were filled
+
+```py
+winningConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+]
+```
+
+---
+
+# end-1
+![bg 40%](image-1.png)
+
+---
+
+# end-2
+![bg 49%](image-2.png)
+
+---
+
+# what if?
+
+```py
+if turn != ctx.message.author:
+            await ctx.send("It is not your turn.")
+            return
+```
+
+---
+# before
+```py
+if not gameOver:
+            mark = ""
+            if turn == ctx.author:
+                if turn == player1:
+                    mark = ":regional_indicator_x:"#cross in tictactoe (an emoji)
+                elif turn == player2:
+                    mark = ":o2:"
+                if 0 < pos < 10 and board[pos - 1] == ":white_large_square:" :
+                    board[pos - 1] = mark
+                    count += 1
+                    if gameOver == True:
+                        await ctx.send(mark + " wins!")
+                    elif count >= 9:
+                        gameOver = True
+                        await ctx.send("It's a tie!")
+
+                    # switch turns
+                    if turn == player1:
+                        turn = player2
+                    elif turn == player2:
+                        turn = player1
+                else:
+                    await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
+            else:
+                await ctx.send("It is not your turn.")
+        else:
+            await ctx.send("Please start a new game using the $tictactoe command.")
+            
+```
+
+---
+
+# after 
+```py
+if gameOver:
+            await ctx.send("Please start a new game using the $tictactoe command.")
+            return
+
+        if turn != ctx.message.author:
+            await ctx.send("It is not your turn.")
+            return
+
+        if not (0 < pos < 10 and board[pos - 1] == ":white_large_square:"):
+            await ctx.send("Be sure to choose an integer between 1 and 9 (inclusive) and an unmarked tile.")
+            return
+
+        mark = ":regional_indicator_x:" if turn == player1 else ":o2:"
+        board[pos - 1] = mark
+        count += 1
+        
+        line = ""
+        for x in range(len(board)):
+            if x == 2 or x == 5 or x == 8: # x % 3 == 2
+                line += " " + board[x]
+                await ctx.send(line)
+                line = ""
+            else:
+                line += " " + board[x]
+```
+
+---
+
  # Chart
 
 ![bg right opacity:.5](./Images/pandas.png)
